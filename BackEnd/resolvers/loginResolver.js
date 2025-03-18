@@ -2,6 +2,7 @@
 import bcrypt from 'bcrypt';
 // Import database connection pool helper
 import { pool } from "../helpers/dbHelper.js";
+import generateToken from "../helpers/tokenHelper.js"
 
 // Define GraphQL resolver for handling login functionality
 export const loginResolver = {
@@ -9,7 +10,11 @@ export const loginResolver = {
         // Mutation for user login
         userLogin: async (_, { username, password }) => {
             const client = await pool.connect(); // Get a database connection
-
+let response = {
+    type: "error",
+    message: "invalid credential",
+    token: "",
+}
             try {
                 console.log("Attempting login for:", username);
 
@@ -20,28 +25,33 @@ export const loginResolver = {
                 };
 
                 const result = await client.query(query);
-
+              
                 // If no user is found, return an error message
                 if (result.rows.length === 0) {
                     console.log("User not found in DB.");
-                    return { type: "error", message: "Invalid credentials" };
+                    return { type: "error", message: "Invalid credentials", token:"" };
                 }
 
                 // Extract user data from the query result
                 const user = result.rows[0].fn_login;
-                console.log("Stored hash from DB:", user.password);
+                console.log("Stored:", user.row);
 
                 // Compare input password with stored hashed password
                 const isValid = await bcrypt.compare(password, user.password);
                 console.log("Password verification result:", isValid);
 
                 // If password is incorrect, return an error message
-                if (!isValid) {
-                    return { type: "error", message: "Invalid credentials" };
+                if (isValid) {
+                    const token = await generateToken(user);
+                    response = {
+                        type: "success",
+                        message: "Login Successfully!",
+                        token: token,
                 }
+            }
+            return response;
 
                 // If login is successful, return a success message
-                return { type: "success", message: "Login successful!" };
             } catch (err) {
                 console.error("Login Error:", err.message);
                 throw new Error(err.message); // Throw an error if something goes wrong

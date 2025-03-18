@@ -8,6 +8,7 @@ type User {
 type loginResponse {
     type: String!
     message: String!
+    token: String!
 }
 
 input InputLogIn {
