@@ -49,7 +49,17 @@ export const userResolver = {
     // Mutation resolvers handle modifying user data
     Mutation: {
         // Add a new user account
-        addUserAccount: async (_, { useraccounts, admin_id }) => {
+        addUserAccount: async (_, { useraccounts, admin_id}, context) => {
+
+            console.log("context", context);
+
+      if (context.type == "error") {
+        return {
+          type: "error",
+          message: context.message,
+        };
+      }
+
             console.log("Add User Input Details: ",useraccounts, admin_id);
             const client = await pool.connect();
             
@@ -96,7 +106,16 @@ export const userResolver = {
         },
 
         // Update an existing user account
-        updateUserAccount: async (_, { admin_id, user_id, useraccounts }) => {
+        updateUserAccount: async (_, { admin_id, user_id, useraccounts}, context) => {
+            console.log("context", context);
+
+      if (context.type == "error") {
+        return {
+          type: "error",
+          message: context.message,
+        };
+      }
+
             const client = await pool.connect();
             try {
                 let hashedPassword = useraccounts.password;
@@ -141,7 +160,15 @@ export const userResolver = {
         },
 
         // Delete a user account
-        deleteUserAccount: async (_, { admin_id, user_id }) => {
+        deleteUserAccount: async (_, { admin_id, user_id }, context) => {
+            console.log("context", context);
+
+      if (context.type == "error") {
+        return {
+          type: "error",
+          message: context.message,
+        };
+      }
             const client = await pool.connect();
             try {
                 let response = {

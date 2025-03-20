@@ -48,7 +48,15 @@ export const vehicleResolver = {
     // Mutation resolvers handle modifying user data
     Mutation: {
         // Add a new user account
-        addVehicle: async (_, { vehicles, admin_id }) => {
+        addVehicle: async (_, { vehicles, admin_id }, context) => {
+            console.log("context", context);
+
+      if (context.type == "error") {
+        return {
+          type: "error",
+          message: context.message,
+        };
+      }
             console.log("Add User Input Details: ",vehicles, admin_id);
             const client = await pool.connect();
             
@@ -91,7 +99,15 @@ export const vehicleResolver = {
         },
 
         // Update an existing user account
-        updateVehicle: async (_, { admin_id, vehicle_id, vehicles }) => {
+        updateVehicle: async (_, { admin_id, vehicle_id, vehicles }, context) => {
+            console.log("context", context);
+
+      if (context.type == "error") {
+        return {
+          type: "error",
+          message: context.message,
+        };
+      }
             const client = await pool.connect();
             try {
 
@@ -130,7 +146,15 @@ export const vehicleResolver = {
         },
 
         // Delete a user account
-        deleteVehicle: async (_, { admin_id, plate_no }) => {
+        deleteVehicle: async (_, { admin_id, plate_no }, context) => {
+            console.log("context", context);
+
+      if (context.type == "error") {
+        return {
+          type: "error",
+          message: context.message,
+        };
+      }
             const client = await pool.connect();
             try {
                 let response = {

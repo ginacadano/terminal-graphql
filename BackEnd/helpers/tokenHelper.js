@@ -7,7 +7,7 @@ const generateToken = async(user) => {
         {username: username, usertype: usertype,},
         
         process.env.ACCESS_TOKEN_SECRET,
-        {expiresIn: "1h"}
+        {expiresIn: "1m"}
 
     );
 return accessToken;

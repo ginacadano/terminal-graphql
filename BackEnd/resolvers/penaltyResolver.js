@@ -64,7 +64,15 @@ import {
     // Mutation resolvers handle modifying user data
     Mutation: {
         // Add a new user account
-        addPenalty: async (_, { penalties, admin_id }) => {
+        addPenalty: async (_, { penalties, admin_id }, context) => {
+            console.log("context", context);
+
+            if (context.type == "error") {
+              return {
+                type: "error",
+                message: context.message,
+              };
+            }
             console.log("Add User Input Details: ",penalties, admin_id);
             const client = await pool.connect();
             
@@ -107,7 +115,16 @@ import {
         },
 
         // Update an existing user account
-        updatePenalty: async (_, { admin_id, penalty_id, penalties }) => {
+        updatePenalty: async (_, { admin_id, penalty_id, penalties }, context) => {
+            console.log("context", context);
+
+      if (context.type == "error") {
+        return {
+          type: "error",
+          message: context.message,
+        };
+      }
+
             const client = await pool.connect();
             try {
                 let response = {
@@ -144,7 +161,15 @@ import {
             }
         },
 
-        markPenaltyAsPaid: async (_, { penalty_id, paid_date, or_no }) => {
+        markPenaltyAsPaid: async (_, { penalty_id, paid_date, or_no }, context) => {
+            console.log("context", context);
+
+      if (context.type == "error") {
+        return {
+          type: "error",
+          message: context.message,
+        };
+      }
             const client = await pool.connect();
             try {
                 let response = {
@@ -184,7 +209,15 @@ import {
         },
 
         // Delete a user account
-        deletePenalty: async (_, { admin_id, user_id }) => {
+        deletePenalty: async (_, { admin_id, user_id }, context) => {
+            console.log("context", context);
+
+      if (context.type == "error") {
+        return {
+          type: "error",
+          message: context.message,
+        };
+      }
             const client = await pool.connect();
             try {
                 let response = {

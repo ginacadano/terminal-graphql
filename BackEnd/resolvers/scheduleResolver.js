@@ -60,7 +60,15 @@ import {
     // Mutation resolvers handle modifying user data
     Mutation: {
         // Add a new user account
-        addSchedule: async (_, { schedules, or_id }) => {
+        addSchedule: async (_, { schedules, or_id }, context) => {
+            console.log("context", context);
+
+      if (context.type == "error") {
+        return {
+          type: "error",
+          message: context.message,
+        };
+      }
             console.log("Add User Input Details: ",schedules, or_id);
             const client = await pool.connect();
             
@@ -103,7 +111,15 @@ import {
         },
 
         // Update an existing user account
-        updateSchedule: async (_, { or_id, schedule_id, schedules }) => {
+        updateSchedule: async (_, { or_id, schedule_id, schedules }, context) => {
+            console.log("context", context);
+
+      if (context.type == "error") {
+        return {
+          type: "error",
+          message: context.message,
+        };
+      }
             const client = await pool.connect();
             try {
 
@@ -142,7 +158,15 @@ import {
         },
 
         // Delete a user account
-        deleteSchedule: async (_, { or_id, schedule_id }) => {
+        deleteSchedule: async (_, { or_id, schedule_id }, context) => {
+            console.log("context", context);
+
+      if (context.type == "error") {
+        return {
+          type: "error",
+          message: context.message,
+        };
+      }
             const client = await pool.connect();
             try {
                 let response = {

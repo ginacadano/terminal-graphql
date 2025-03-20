@@ -8,7 +8,7 @@ import generateToken from "../helpers/tokenHelper.js"
 export const loginResolver = {
     Mutation: {
         // Mutation for user login
-        userLogin: async (_, { username, password }) => {
+        userLogin: async (_, { username, password}) => {
             const client = await pool.connect(); // Get a database connection
 let response = {
     type: "error",
