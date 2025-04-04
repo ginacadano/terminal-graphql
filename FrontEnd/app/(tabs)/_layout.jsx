@@ -3,11 +3,11 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 export default function TabsLayout() {
   return (
-    <Tabs options={{
-      headerShown: false,
+    <Tabs ScreenOptions={{
    
+   tabBarStyle:{backgroundColor: 'white'},
       tabBarActiveTintColor: 'black',
-      tabBarInactiveTintColor: 'black',
+      tabBarInactiveTintColor: 'gray',
       tabBarLabelStyle: {
         fontSize: 12,
         marginBottom: 5,
@@ -21,18 +21,19 @@ export default function TabsLayout() {
       
       options={{
         title:'Home',
-        headerTitle:'Index',
         headerShown: false,
-        tabBarIcon: ({ color }) => (
-          <MaterialIcons name="home" size={24} color='black' />
+        tabBarIcon: ({ focused, color }) => (
+          <MaterialIcons name="home" size={24} color={color} />
         ),
       }}
 />
       <Tabs.Screen name='login'
       options={{
         title:'login',
-        headerTitle:'Login',
         headerShown: false,
+        tabBarIcon: ({ focused, color }) => (
+          <MaterialIcons name="menu" size={24} color={color} />
+        ),
       }}
       />
     </Tabs> 
