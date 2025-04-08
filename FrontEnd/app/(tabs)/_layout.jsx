@@ -15,7 +15,7 @@ export default function TabsLayout() {
             style={{ flex: 1 }}
           />
         ),
-        tabBarActiveTintColor: "rgb(128, 126, 126)",
+        tabBarActiveTintColor: "rgb(119, 117, 117)",
         tabBarInactiveTintColor: "black",
       }}
     >
