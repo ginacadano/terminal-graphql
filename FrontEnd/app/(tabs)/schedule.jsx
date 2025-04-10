@@ -20,119 +20,15 @@ export default function Index() {
       style={styles.container}
     >
       <SafeAreaView style={styles.safeArea}>
-        {/* Menu Icon */}
-
         <View style={styles.menuContainer}>
           <TouchableOpacity>
-            <Link href="/login">
-              <Text style={styles.menuContainer}>Login</Text>
-            </Link>
+            <AntDesign name="logout" size={24} color="black" />
           </TouchableOpacity>
         </View>
-
-        {/* Main Content */}
-        <ScrollView contentContainerStyle={styles.scrollContent}>
-          {/* Header Banner */}
-          <View style={styles.headerBanner}>
-            <Text style={styles.headerText}>Happy Safe Trip!</Text>
-          </View>
-
-          {/* Vehicle Selection */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Vehicles:</Text>
-            <View style={styles.vehiclesContainer}>
-              <TouchableOpacity
-                style={[
-                  styles.vehicleButton,
-                  selectedVehicle === "bus" && styles.selectedVehicle,
-                  styles.busButton,
-                ]}
-                onPress={() => setSelectedVehicle("bus")}
-              >
-                <Text style={styles.vehicleText}>🚌 Bus</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={[
-                  styles.vehicleButton,
-                  selectedVehicle === "van" && styles.selectedVehicle,
-                  styles.vanButton,
-                ]}
-                onPress={() => setSelectedVehicle("van")}
-              >
-                <Text style={styles.vehicleText}>🚐 Van</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={[
-                  styles.vehicleButton,
-                  selectedVehicle === "jeep" && styles.selectedVehicle,
-                  styles.jeepButton,
-                ]}
-                onPress={() => setSelectedVehicle("jeep")}
-              >
-                <Text style={styles.vehicleText}>🚗 Jeep</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-
-          {/* Destination Section */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Destination:</Text>
-
-            {/* Route Cards */}
-
-            <View style={styles.routeCards}>
-              <RouteCard from="Maasin" to="Bato" />
-              <RouteCard from="Maasin" to="Bay-bay" />
-              <RouteCard from="Maasin" to="Bato" />
-            </View>
-          </View>
-        </ScrollView>
       </SafeAreaView>
     </LinearGradient>
   );
 }
-
-const RouteCard = ({ from, to }) => {
-  return (
-    <LinearGradient
-      colors={["rgb(169, 205, 216)", "rgb(129, 177, 119)"]}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-      style={styles.routeCard}
-    >
-      <View style={styles.routeIconColumn}>
-        <View style={styles.routeLine}></View>
-        <View style={styles.arrowContainer}>
-          <Text style={styles.arrowUp}>↑ </Text>
-          <Text style={styles.arrowDown}> ↓</Text>
-        </View>
-        <View style={styles.routeLine}></View>
-      </View>
-
-      <View style={styles.routeInfoColumn}>
-        <View style={styles.routeInfo}>
-          <Ionicons name="navigate-circle-outline" size={18} color="#fff" />
-          <Text style={styles.routeLabel}>From:</Text>
-          <Text style={styles.routeValue}>{from}</Text>
-        </View>
-
-        <View style={styles.routeInfo}>
-          <Ionicons name="location-outline" size={18} color="#fff" />
-          <Text style={styles.routeLabel}>To:</Text>
-          <Text style={styles.routeValue}>{to}</Text>
-        </View>
-      </View>
-
-      <View style={styles.tripTypeColumn}>
-        <View style={styles.tripTypeButton}>
-          <Text style={styles.tripTypeText}>One Way</Text>
-        </View>
-      </View>
-    </LinearGradient>
-  );
-};
 
 const styles = StyleSheet.create({
   container: {
@@ -143,13 +39,6 @@ const styles = StyleSheet.create({
     paddingTop: 40,
   },
   menuContainer: {
-    position: "absolute",
-    top: 40,
-    right: 20,
-    zIndex: 10,
-  },
-
-  loginContainer: {
     position: "absolute",
     top: 40,
     right: 20,

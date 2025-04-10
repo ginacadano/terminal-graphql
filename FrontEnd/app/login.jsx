@@ -9,7 +9,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import index from "../assets/styles/index";
+import login from "../assets/styles/login";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { Link } from "expo-router";
@@ -34,7 +34,7 @@ export default function Login() {
         >
           <View style={styles.backButtonContainer}>
             <TouchableOpacity style={styles.backButton}>
-              <Link href="index">
+              <Link href="/(tabs)">
                 <Ionicons name="arrow-back" size={24} color="#444" />
               </Link>
             </TouchableOpacity>

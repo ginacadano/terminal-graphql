@@ -25,7 +25,12 @@ export default function Index() {
         <View style={styles.menuContainer}>
           <TouchableOpacity>
             <Link href="/login">
-              <Text style={styles.menuContainer}>Login</Text>
+              <AntDesign
+                name="login"
+                size={24}
+                color="black"
+                style={styles.menuContainer}
+              />
             </Link>
           </TouchableOpacity>
         </View>
@@ -143,13 +148,6 @@ const styles = StyleSheet.create({
     paddingTop: 40,
   },
   menuContainer: {
-    position: "absolute",
-    top: 40,
-    right: 20,
-    zIndex: 10,
-  },
-
-  loginContainer: {
     position: "absolute",
     top: 40,
     right: 20,

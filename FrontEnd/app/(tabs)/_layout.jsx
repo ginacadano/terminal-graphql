@@ -2,6 +2,7 @@ import { Tabs } from "expo-router";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { LinearGradient } from "expo-linear-gradient";
 import globalStyles from "../../assets/styles/globalStyles";
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 
 export default function TabsLayout() {
   return (
@@ -20,6 +21,27 @@ export default function TabsLayout() {
       }}
     >
       {/* Define your tabs here */}
+
+      <Tabs.Screen
+        name="schedule"
+        options={{
+          title: "Schedules",
+          headerShown: false,
+          tabBarIcon: ({ focused, color }) => (
+            <MaterialIcons name="calendar-month" size={24} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="penalty"
+        options={{
+          title: "Penalty",
+          headerShown: false,
+          tabBarIcon: ({ focused, color }) => (
+            <FontAwesome6 name="triangle-exclamation" size={24} color={color} />
+          ),
+        }}
+      />
       <Tabs.Screen
         name="index"
         options={{
@@ -27,6 +49,17 @@ export default function TabsLayout() {
           headerShown: false,
           tabBarIcon: ({ focused, color }) => (
             <MaterialIcons name="home" size={24} color={color} />
+          ),
+        }}
+      />
+
+      <Tabs.Screen
+        name="account"
+        options={{
+          title: "Account",
+          headerShown: false,
+          tabBarIcon: ({ focused, color }) => (
+            <MaterialIcons name="people" size={24} color={color} />
           ),
         }}
       />

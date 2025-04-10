@@ -11,6 +11,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { Link } from "expo-router";
 import AntDesign from "@expo/vector-icons/AntDesign";
+
 export default function Index() {
   const [selectedVehicle, setSelectedVehicle] = useState(null);
 
