@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
 
   loginContainer: {
     position: "absolute",
-    top: 40,
+    top: 39,
     right: 20,
     zIndex: 10,
   },
