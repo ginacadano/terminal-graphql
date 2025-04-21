@@ -51,12 +51,12 @@ export const userResolver = {
     addUserAccount: async (_, { useraccounts, admin_id }, context) => {
       console.log("context", context);
 
-      //   if (context.type == "error") {
-      //     return {
-      //       type: "error",
-      //       message: context.message,
-      //     };
-      //   }
+      if (context.type == "error") {
+        return {
+          type: "error",
+          message: context.message,
+        };
+      }
 
       console.log("Add User Input Details: ", useraccounts, admin_id);
       const client = await pool.connect();
@@ -111,12 +111,12 @@ export const userResolver = {
     ) => {
       console.log("context", context);
 
-      //   if (context.type == "error") {
-      //     return {
-      //       type: "error",
-      //       message: context.message,
-      //     };
-      //   }
+      if (context.type == "error") {
+        return {
+          type: "error",
+          message: context.message,
+        };
+      }
 
       const client = await pool.connect();
       try {
@@ -171,12 +171,12 @@ export const userResolver = {
     deleteUserAccount: async (_, { admin_id, user_id }, context) => {
       console.log("context", context);
 
-      //   if (context.type == "error") {
-      //     return {
-      //       type: "error",
-      //       message: context.message,
-      //     };
-      //   }
+      if (context.type == "error") {
+        return {
+          type: "error",
+          message: context.message,
+        };
+      }
       const client = await pool.connect();
       try {
         let response = {
