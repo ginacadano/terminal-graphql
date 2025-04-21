@@ -48,7 +48,7 @@ export const loginResolver = {
             message: "Login Successfully!",
             token: token,
             user: {
-              userId: user.userId,
+              user_id: user.user_id,
               username: user.username,
               usertype: user.usertype,
             },

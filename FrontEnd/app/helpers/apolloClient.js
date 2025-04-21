@@ -1,14 +1,3 @@
-// import { ApolloClient, InMemoryCache } from "@apollo/client";
-
-// const API_ENDPOINT = "https://192.168.1.11:4004"; // GraphQL endpoint
-
-// const client1 = new ApolloClient({
-//   uri: API_ENDPOINT,
-//   cache: new InMemoryCache(),
-// });
-
-// export default client1;
-
 import {
   ApolloClient,
   InMemoryCache,
@@ -16,21 +5,19 @@ import {
   ApolloLink,
 } from "@apollo/client";
 import { onError } from "@apollo/client/link/error";
+import { setContext } from "@apollo/client/link/context";
 import * as SecureStore from "expo-secure-store";
 
-const API_ENDPOINT = "http://192.168.1.11:4004/graphql";
+const API_ENDPOINT = "http://192.168.254.103:4004/graphql";
 
-const authLink = new ApolloLink(async (operation, forward) => {
+const authLink = setContext(async (_, { headers }) => {
   const token = await SecureStore.getItemAsync("user_token");
-
-  operation.setContext(({ headers = {} }) => ({
+  return {
     headers: {
       ...headers,
       authorization: token ? `Bearer ${token}` : "",
     },
-  }));
-
-  return forward(operation);
+  };
 });
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {

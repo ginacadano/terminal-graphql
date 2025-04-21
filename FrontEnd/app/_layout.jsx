@@ -6,12 +6,25 @@ import { View, ActivityIndicator, Text, StyleSheet } from "react-native";
 
 export default function RootLayout() {
   const [isReady, setIsReady] = useState(false);
+  const [tokenLoaded, setTokenLoaded] = useState(false);
 
   useEffect(() => {
+    const loadToken = async () => {
+      try {
+        const token = await SecureStore.getItemAsync("user_token");
+        console.log("Token loaded at startup:", token);
+      } catch (e) {
+        console.log("Error loading token", e);
+      } finally {
+        setTokenLoaded(true);
+      }
+    };
+
+    loadToken();
     setIsReady(true);
   }, []);
 
-  if (!isReady) {
+  if (!isReady || !tokenLoaded) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#CDD6F4" />

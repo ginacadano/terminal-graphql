@@ -15,12 +15,20 @@ import { Ionicons } from "@expo/vector-icons";
 import { Link } from "expo-router";
 import { useMutation } from "@apollo/client";
 import { useRouter } from "expo-router";
+import * as SecureStore from "expo-secure-store";
 import LOGIN from "./mutations/loginMutation";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const [loginError, setLoginError] = useState("");
+
+  {
+    loginError ? (
+      <Text style={{ color: "red", marginBottom: 10 }}>{loginError}</Text>
+    ) : null;
+  }
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
@@ -30,6 +38,8 @@ const Login = () => {
 
   const [login, { loading }] = useMutation(LOGIN, {
     onCompleted: async (data) => {
+      console.log("Login response:", data);
+
       try {
         if (data?.userLogin?.token && data?.userLogin?.user) {
           const { token, user } = data.userLogin;
@@ -37,9 +47,9 @@ const Login = () => {
           await SecureStore.setItemAsync("user_token", token);
           await SecureStore.setItemAsync("user_type", user.usertype);
 
-          if (user.user_type === "admin") {
+          if (user.usertype === "admin") {
             router.replace("/(admin)/account");
-          } else if (user.user_type === "user") {
+          } else if (user.usertype === "user") {
             router.replace("/(user)/home");
           } else {
             router.replace("/(tabs)");

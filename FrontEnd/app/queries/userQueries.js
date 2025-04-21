@@ -1,8 +1,9 @@
 import { gql } from "@apollo/client";
 
 const GET_USERS = gql`
-  query UserQuery {
+  query Users {
     users {
+      user_id
       username
       usertype
     }

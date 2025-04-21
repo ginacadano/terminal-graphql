@@ -6,6 +6,14 @@ import { GET_USERS } from "../queries/userQueries";
 export default function Account() {
   const { loading, error, data } = useQuery(GET_USERS);
 
+  if (!GET_USERS) {
+    return (
+      <View>
+        <Text>GET_USERS query is undefined! Check the import or export.</Text>
+      </View>
+    );
+  }
+
   if (loading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
