@@ -20,36 +20,23 @@ export default function TabsLayout() {
         tabBarInactiveTintColor: "black",
       }}
     >
-      {/* Define your tabs here */}
-
       <Tabs.Screen
-        name="schedule"
+        name="account"
         options={{
-          title: "Schedules",
+          title: "Account",
           headerShown: false,
           tabBarIcon: ({ focused, color }) => (
-            <MaterialIcons name="calendar-month" size={24} color={color} />
+            <MaterialIcons name="people" size={24} color={color} />
           ),
         }}
       />
       <Tabs.Screen
-        name="index"
+        name="penalty"
         options={{
-          title: "Home",
+          title: "Penalty",
           headerShown: false,
           tabBarIcon: ({ focused, color }) => (
-            <MaterialIcons name="home" size={24} color={color} />
-          ),
-        }}
-      />
-
-      <Tabs.Screen
-        name="vehicle"
-        options={{
-          title: "Vehicle",
-          headerShown: false,
-          tabBarIcon: ({ focused, color }) => (
-            <MaterialIcons name="commute" size={25} color={color} />
+            <FontAwesome6 name="triangle-exclamation" size={24} color={color} />
           ),
         }}
       />

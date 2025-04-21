@@ -13,13 +13,74 @@ import login from "../assets/styles/login";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { Link } from "expo-router";
-export default function Login() {
+import { useMutation } from "@apollo/client";
+import { useRouter } from "expo-router";
+import LOGIN from "./mutations/loginMutation";
+
+const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(false);
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
+  };
+
+  const router = useRouter();
+
+  const [login, { loading }] = useMutation(LOGIN, {
+    onCompleted: async (data) => {
+      try {
+        if (data?.userLogin?.token && data?.userLogin?.user) {
+          const { token, user } = data.userLogin;
+
+          await SecureStore.setItemAsync("user_token", token);
+          await SecureStore.setItemAsync("user_type", user.usertype);
+
+          if (user.user_type === "admin") {
+            router.replace("/(admin)/account");
+          } else if (user.user_type === "user") {
+            router.replace("/(user)/home");
+          } else {
+            router.replace("/(tabs)");
+          }
+        } else {
+          setLoginError("Invalid response format. Please try again.");
+        }
+      } catch (err) {
+        setLoginError("Error saving credentials. Please try again.");
+        console.error("Login completion error:", err);
+      }
+    },
+    onError: (error) => {
+      console.error("Login mutation error:", error);
+      if (error.message.includes("Invalid credentials")) {
+        setLoginError("Incorrect username or password.");
+      } else {
+        setLoginError(
+          "Login failed. Please check your connection and try again."
+        );
+      }
+    },
+  });
+
+  const handleLogin = async () => {
+    setLoginError("");
+    if (!username.trim() || !password.trim()) {
+      setLoginError("Please enter both username and password");
+      return;
+    }
+
+    try {
+      await login({
+        variables: {
+          username: username.trim(),
+          password: password.trim(),
+        },
+      });
+    } catch (e) {
+      console.error("Mutation execution error:", e);
+    }
   };
 
   return (
@@ -98,7 +159,10 @@ export default function Login() {
             </View>
 
             <View style={styles.signInButtonContainer}>
-              <TouchableOpacity style={styles.signInButton}>
+              <TouchableOpacity
+                onPress={handleLogin}
+                style={styles.signInButton}
+              >
                 <Text style={styles.signInButtonText}>Sign in</Text>
                 <Ionicons name="arrow-forward" size={24} color="white" />
               </TouchableOpacity>
@@ -115,7 +179,9 @@ export default function Login() {
       </SafeAreaView>
     </LinearGradient>
   );
-}
+};
+
+export default Login;
 
 const styles = StyleSheet.create({
   container: {

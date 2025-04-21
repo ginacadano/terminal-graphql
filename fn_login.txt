@@ -1,0 +1,37 @@
+-- FUNCTION: public.fn_login(character varying)
+
+-- DROP FUNCTION IF EXISTS public.fn_login(character varying);
+
+CREATE OR REPLACE FUNCTION public.fn_login(
+	p_user_name character varying)
+    RETURNS jsonb
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE PARALLEL UNSAFE
+AS $BODY$
+DECLARE
+    stored_password TEXT;
+    stored_username VARCHAR;
+    stored_usertype VARCHAR;
+    stored_user_id INT;
+BEGIN    
+    SELECT user_id, password, user_name, user_type
+    INTO stored_user_id, stored_password, stored_username, stored_usertype
+    FROM UserAccount
+    WHERE user_name = p_user_name;
+    
+    IF NOT FOUND THEN
+        RETURN jsonb_build_object('type', 'error', 'message', 'User not found');
+    END IF;
+
+    RETURN jsonb_build_object(
+        'user_id', stored_user_id,
+        'password', stored_password,
+        'user_name', stored_username,
+        'user_type', stored_usertype
+    );
+END;
+$BODY$;
+
+ALTER FUNCTION public.fn_login(character varying)
+    OWNER TO postgres;
