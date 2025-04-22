@@ -49,8 +49,8 @@ const Login = () => {
 
           if (user.usertype === "admin") {
             router.replace("/(admin)/account");
-          } else if (user.usertype === "user") {
-            router.replace("/(user)/home");
+          } else if (user.usertype === "ordinary user") {
+            router.replace("/(user)/schedule");
           } else {
             router.replace("/(tabs)");
           }

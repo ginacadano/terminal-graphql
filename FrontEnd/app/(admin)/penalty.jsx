@@ -24,13 +24,8 @@ export default function Index() {
 
         <View style={styles.menuContainer}>
           <TouchableOpacity>
-            <Link href="/login">
-              <AntDesign
-                name="login"
-                size={24}
-                color="black"
-                style={styles.menuContainer}
-              />
+            <Link href="/(tabs)">
+              <Text style={styles.menuContainer}>Log-out</Text>
             </Link>
           </TouchableOpacity>
         </View>

@@ -14,6 +14,8 @@ export default function Index() {
           router.replace("/(tabs)");
         } else if (userType === "admin") {
           router.replace("/(admin)/account");
+        } else if (userType === "ordinary user") {
+          router.replace("/(user)/schedule");
         } else {
           router.replace("/(tabs)");
         }

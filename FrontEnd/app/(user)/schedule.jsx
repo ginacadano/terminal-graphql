@@ -22,7 +22,9 @@ export default function Index() {
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.menuContainer}>
           <TouchableOpacity>
-            <AntDesign name="logout" size={24} color="black" />
+            <Link href="/(tabs)">
+              <Text style={styles.menuContainer}>Log-out</Text>
+            </Link>
           </TouchableOpacity>
         </View>
       </SafeAreaView>

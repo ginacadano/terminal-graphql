@@ -16,22 +16,12 @@ export default function TabsLayout() {
             style={{ flex: 1 }}
           />
         ),
-        tabBarActiveTintColor: "rgb(119, 117, 117)",
-        tabBarInactiveTintColor: "black",
+        tabBarActiveTintColor: "black",
+        tabBarInactiveTintColor: "rgb(119, 117, 117)",
       }}
     >
       {/* Define your tabs here */}
 
-      <Tabs.Screen
-        name="schedule"
-        options={{
-          title: "Schedules",
-          headerShown: false,
-          tabBarIcon: ({ focused, color }) => (
-            <MaterialIcons name="calendar-month" size={24} color={color} />
-          ),
-        }}
-      />
       <Tabs.Screen
         name="index"
         options={{
@@ -39,17 +29,6 @@ export default function TabsLayout() {
           headerShown: false,
           tabBarIcon: ({ focused, color }) => (
             <MaterialIcons name="home" size={24} color={color} />
-          ),
-        }}
-      />
-
-      <Tabs.Screen
-        name="vehicle"
-        options={{
-          title: "Vehicle",
-          headerShown: false,
-          tabBarIcon: ({ focused, color }) => (
-            <MaterialIcons name="commute" size={25} color={color} />
           ),
         }}
       />
