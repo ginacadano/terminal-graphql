@@ -19,9 +19,39 @@ import { LinearGradient } from "expo-linear-gradient";
 
 export default function Account() {
   const { loading, error, data, refetch } = useQuery(GET_USERS);
-  const [addUser] = useMutation(ADD_USER);
-  const [updateUser] = useMutation(UPDATE_USER);
-  const [deleteUser] = useMutation(DELETE_USER);
+
+  // Properly handle the mutation result and error
+  const [addUser, { loading: addLoading }] = useMutation(ADD_USER, {
+    onCompleted: () => {
+      Alert.alert("Success", "User added successfully");
+      setModalVisible(false);
+      refetch();
+    },
+    onError: (error) => {
+      Alert.alert("Error", error.message || "Failed to add user");
+    },
+  });
+
+  const [updateUser] = useMutation(UPDATE_USER, {
+    onCompleted: () => {
+      Alert.alert("Success", "User updated successfully");
+      setModalVisible(false);
+      refetch();
+    },
+    onError: (error) => {
+      Alert.alert("Error", error.message || "Failed to update user");
+    },
+  });
+
+  const [deleteUser] = useMutation(DELETE_USER, {
+    onCompleted: () => {
+      Alert.alert("Success", "User deleted successfully");
+      refetch();
+    },
+    onError: (error) => {
+      Alert.alert("Error", error.message || "Failed to delete user");
+    },
+  });
 
   const [modalVisible, setModalVisible] = useState(false);
   const [editMode, setEditMode] = useState(false);
@@ -45,22 +75,49 @@ export default function Account() {
   };
 
   const handleSubmit = async () => {
-    if (!username || !usertype) return;
-
-    if (editMode && selectedUser) {
-      await updateUser({
-        variables: {
-          user_id: selectedUser.user_id,
-          username,
-          usertype,
-        },
-      });
-    } else {
-      await addUser({ variables: { username, usertype } });
+    if (!username || !usertype) {
+      Alert.alert("Validation Error", "Username and User Type are required");
+      return;
     }
 
-    setModalVisible(false);
-    refetch();
+    try {
+      if (editMode && selectedUser) {
+        await updateUser({
+          variables: {
+            user_id: selectedUser.user_id,
+            username,
+            usertype,
+          },
+        });
+      } else {
+        // Call addUser mutation with proper variables
+        await addUser({
+          variables: {
+            username,
+            usertype,
+          },
+          // Update cache to reflect the new user immediately
+          update: (cache, { data: { addUser } }) => {
+            try {
+              const { users } = cache.readQuery({ query: GET_USERS });
+              cache.writeQuery({
+                query: GET_USERS,
+                data: { users: [...users, addUser] },
+              });
+            } catch (error) {
+              console.error("Error updating cache:", error);
+            }
+          },
+        });
+      }
+
+      // Reset state
+      setUsername("");
+      setUsertype("");
+    } catch (err) {
+      console.error("Submit error:", err);
+      Alert.alert("Error", err.message);
+    }
   };
 
   const handleDelete = async (user_id) => {
@@ -73,8 +130,28 @@ export default function Account() {
           text: "Delete",
           style: "destructive",
           onPress: async () => {
-            await deleteUser({ variables: { user_id } });
-            refetch();
+            try {
+              await deleteUser({
+                variables: { user_id },
+                // Update cache to remove deleted user immediately
+                update: (cache) => {
+                  try {
+                    const { users } = cache.readQuery({ query: GET_USERS });
+                    cache.writeQuery({
+                      query: GET_USERS,
+                      data: {
+                        users: users.filter((user) => user.user_id !== user_id),
+                      },
+                    });
+                  } catch (error) {
+                    console.error("Error updating cache:", error);
+                  }
+                },
+              });
+            } catch (err) {
+              console.error("Delete error:", err);
+              Alert.alert("Error", err.message);
+            }
           },
         },
       ]
@@ -125,7 +202,7 @@ export default function Account() {
     >
       <View style={styles.container}>
         <FlatList
-          data={data.users}
+          data={data?.users || []}
           renderItem={renderItem}
           keyExtractor={(item) => item.user_id.toString()}
           ListHeaderComponent={
@@ -163,8 +240,14 @@ export default function Account() {
                 >
                   <Text style={styles.actionText}>Cancel</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={handleSubmit} style={styles.saveBtn}>
-                  <Text style={styles.actionText}>Save</Text>
+                <TouchableOpacity
+                  onPress={handleSubmit}
+                  style={styles.saveBtn}
+                  disabled={addLoading}
+                >
+                  <Text style={styles.actionText}>
+                    {addLoading ? "Saving..." : "Save"}
+                  </Text>
                 </TouchableOpacity>
               </View>
             </View>

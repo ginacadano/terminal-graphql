@@ -60,7 +60,9 @@ export default function Index() {
                 ]}
                 onPress={() => setSelectedVehicle("van")}
               >
-                <Text style={styles.vehicleText}>🚐 Van</Text>
+                <Link href="/userScheduleView">
+                  <Text style={styles.vehicleText}>🚐 Van</Text>
+                </Link>
               </TouchableOpacity>
 
               <TouchableOpacity
