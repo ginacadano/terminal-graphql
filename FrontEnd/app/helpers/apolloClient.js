@@ -9,7 +9,7 @@ import { setContext } from "@apollo/client/link/context";
 import * as SecureStore from "expo-secure-store";
 import { useNavigation } from "@react-navigation/native"; // Import for navigation
 
-const API_ENDPOINT = "http://192.168.254.103:4004/graphql";
+const API_ENDPOINT = "http://192.168.0.56:4004/graphql";
 
 // Create Apollo Client instance (with navigation added)
 const authLink = setContext(async (_, { headers }) => {

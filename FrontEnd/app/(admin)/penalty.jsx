@@ -6,13 +6,35 @@ import {
   TouchableOpacity,
   SafeAreaView,
   ScrollView,
+  TextInput,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { Link } from "expo-router";
-import AntDesign from "@expo/vector-icons/AntDesign";
-export default function Index() {
-  const [selectedVehicle, setSelectedVehicle] = useState(null);
+
+export default function Penalty() {
+  const [selectedPenalty, setSelectedPenalty] = useState(null);
+  const [isAddModalVisible, setIsAddModalVisible] = useState(false);
+
+  // Mock penalty data for UI purposes
+  const mockPenalties = [
+    {
+      penalty_id: 1,
+      violation: "Speeding",
+      violation_date: "2025-04-20",
+      amount_penalty: 500,
+      plate_no: "ABC123",
+      paid: false,
+    },
+    {
+      penalty_id: 2,
+      violation: "Illegal Parking",
+      violation_date: "2025-04-22",
+      amount_penalty: 300,
+      plate_no: "XYZ789",
+      paid: true,
+    },
+  ];
 
   return (
     <LinearGradient
@@ -20,12 +42,11 @@ export default function Index() {
       style={styles.container}
     >
       <SafeAreaView style={styles.safeArea}>
-        {/* Menu Icon */}
-
+        {/* Menu/Login */}
         <View style={styles.menuContainer}>
           <TouchableOpacity>
-            <Link href="/(tabs)">
-              <Text style={styles.menuContainer}>Log-out</Text>
+            <Link href="/login">
+              <Text style={styles.menuText}>Login</Text>
             </Link>
           </TouchableOpacity>
         </View>
@@ -34,102 +55,156 @@ export default function Index() {
         <ScrollView contentContainerStyle={styles.scrollContent}>
           {/* Header Banner */}
           <View style={styles.headerBanner}>
-            <Text style={styles.headerText}>Happy Safe Trip!</Text>
+            <Text style={styles.headerText}>Penalty Management</Text>
           </View>
 
-          {/* Vehicle Selection */}
+          {/* Penalty List */}
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Vehicles:</Text>
-            <View style={styles.vehiclesContainer}>
-              <TouchableOpacity
-                style={[
-                  styles.vehicleButton,
-                  selectedVehicle === "bus" && styles.selectedVehicle,
-                  styles.busButton,
-                ]}
-                onPress={() => setSelectedVehicle("bus")}
-              >
-                <Text style={styles.vehicleText}>🚌 Bus</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={[
-                  styles.vehicleButton,
-                  selectedVehicle === "van" && styles.selectedVehicle,
-                  styles.vanButton,
-                ]}
-                onPress={() => setSelectedVehicle("van")}
-              >
-                <Text style={styles.vehicleText}>🚐 Van</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={[
-                  styles.vehicleButton,
-                  selectedVehicle === "jeep" && styles.selectedVehicle,
-                  styles.jeepButton,
-                ]}
-                onPress={() => setSelectedVehicle("jeep")}
-              >
-                <Text style={styles.vehicleText}>🚗 Jeep</Text>
-              </TouchableOpacity>
+            <Text style={styles.sectionTitle}>Penalties:</Text>
+            <View style={styles.penaltyContainer}>
+              {mockPenalties.map((penalty) => (
+                <PenaltyCard
+                  key={penalty.penalty_id}
+                  penalty={penalty}
+                  isSelected={selectedPenalty === penalty.penalty_id}
+                  onSelect={() => setSelectedPenalty(penalty.penalty_id)}
+                />
+              ))}
             </View>
           </View>
 
-          {/* Destination Section */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Destination:</Text>
+          {/* Add Penalty Button */}
+          <TouchableOpacity
+            style={styles.addButton}
+            onPress={() => setIsAddModalVisible(true)}
+          >
+            <Text style={styles.addButtonText}>Add New Penalty</Text>
+          </TouchableOpacity>
 
-            {/* Route Cards */}
-
-            <View style={styles.routeCards}>
-              <RouteCard from="Maasin" to="Bato" />
-              <RouteCard from="Maasin" to="Bay-bay" />
-              <RouteCard from="Maasin" to="Bato" />
+          {/* Add Penalty Modal (Simplified) */}
+          {isAddModalVisible && (
+            <View style={styles.modalContainer}>
+              <LinearGradient
+                colors={["rgb(169, 205, 216)", "rgb(129, 177, 119)"]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.modalContent}
+              >
+                <Text style={styles.modalTitle}>Add Penalty</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Violation"
+                  placeholderTextColor="#aaa"
+                />
+                <TextInput
+                  style={styles.input}
+                  placeholder="Violation Date (YYYY-MM-DD)"
+                  placeholderTextColor="#aaa"
+                />
+                <TextInput
+                  style={styles.input}
+                  placeholder="Amount"
+                  placeholderTextColor="#aaa"
+                  keyboardType="numeric"
+                />
+                <TextInput
+                  style={styles.input}
+                  placeholder="Plate Number"
+                  placeholderTextColor="#aaa"
+                />
+                <View style={styles.modalButtons}>
+                  <TouchableOpacity
+                    style={styles.modalButton}
+                    onPress={() => setIsAddModalVisible(false)}
+                  >
+                    <Text style={styles.modalButtonText}>Cancel</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.modalButton}>
+                    <Text style={styles.modalButtonText}>Submit</Text>
+                  </TouchableOpacity>
+                </View>
+              </LinearGradient>
             </View>
-          </View>
+          )}
         </ScrollView>
       </SafeAreaView>
     </LinearGradient>
   );
 }
 
-const RouteCard = ({ from, to }) => {
+const PenaltyCard = ({ penalty, isSelected, onSelect }) => {
   return (
     <LinearGradient
       colors={["rgb(169, 205, 216)", "rgb(129, 177, 119)"]}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
-      style={styles.routeCard}
+      style={[styles.penaltyCard, isSelected && styles.selectedPenalty]}
     >
-      <View style={styles.routeIconColumn}>
-        <View style={styles.routeLine}></View>
-        <View style={styles.arrowContainer}>
-          <Text style={styles.arrowUp}>↑ </Text>
-          <Text style={styles.arrowDown}> ↓</Text>
+      <TouchableOpacity onPress={onSelect}>
+        <View style={styles.penaltyInfo}>
+          <Ionicons
+            name="warning-outline"
+            size={18}
+            color="#fff"
+            style={styles.icon}
+          />
+          <View>
+            <Text style={styles.penaltyLabel}>Violation:</Text>
+            <Text style={styles.penaltyValue}>{penalty.violation}</Text>
+          </View>
         </View>
-        <View style={styles.routeLine}></View>
-      </View>
-
-      <View style={styles.routeInfoColumn}>
-        <View style={styles.routeInfo}>
-          <Ionicons name="navigate-circle-outline" size={18} color="#fff" />
-          <Text style={styles.routeLabel}>From:</Text>
-          <Text style={styles.routeValue}>{from}</Text>
+        <View style={styles.penaltyInfo}>
+          <Ionicons
+            name="calendar-outline"
+            size={18}
+            color="#fff"
+            style={styles.icon}
+          />
+          <View>
+            <Text style={styles.penaltyLabel}>Date:</Text>
+            <Text style={styles.penaltyValue}>{penalty.violation_date}</Text>
+          </View>
         </View>
-
-        <View style={styles.routeInfo}>
-          <Ionicons name="location-outline" size={18} color="#fff" />
-          <Text style={styles.routeLabel}>To:</Text>
-          <Text style={styles.routeValue}>{to}</Text>
+        <View style={styles.penaltyInfo}>
+          <Ionicons
+            name="cash-outline"
+            size={18}
+            color="#fff"
+            style={styles.icon}
+          />
+          <View>
+            <Text style={styles.penaltyLabel}>Amount:</Text>
+            <Text style={styles.penaltyValue}>₱{penalty.amount_penalty}</Text>
+          </View>
         </View>
-      </View>
-
-      <View style={styles.tripTypeColumn}>
-        <View style={styles.tripTypeButton}>
-          <Text style={styles.tripTypeText}>One Way</Text>
+        <View style={styles.penaltyInfo}>
+          <Ionicons
+            name="car-outline"
+            size={18}
+            color="#fff"
+            style={styles.icon}
+          />
+          <View>
+            <Text style={styles.penaltyLabel}>Plate No:</Text>
+            <Text style={styles.penaltyValue}>{penalty.plate_no}</Text>
+          </View>
         </View>
-      </View>
+        <View style={styles.statusContainer}>
+          <Text
+            style={[
+              styles.statusText,
+              penalty.paid ? styles.paid : styles.unpaid,
+            ]}
+          >
+            {penalty.paid ? "Paid" : "Unpaid"}
+          </Text>
+          {!penalty.paid && (
+            <TouchableOpacity style={styles.markPaidButton}>
+              <Text style={styles.markPaidText}>Mark as Paid</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      </TouchableOpacity>
     </LinearGradient>
   );
 };
@@ -148,14 +223,10 @@ const styles = StyleSheet.create({
     right: 20,
     zIndex: 10,
   },
-  menuIcon: {
-    padding: 5,
-  },
-  menuLine: {
-    width: 24,
-    height: 2,
-    backgroundColor: "#555",
-    marginVertical: 3,
+  menuText: {
+    fontSize: 16,
+    color: "#555",
+    fontWeight: "500",
   },
   scrollContent: {
     paddingBottom: 40,
@@ -190,109 +261,125 @@ const styles = StyleSheet.create({
     color: "#555",
     marginBottom: 10,
   },
-  vehiclesContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  vehicleButton: {
-    padding: 15,
-    borderRadius: 20,
-    width: "30%",
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
-    elevation: 3,
-  },
-  busButton: {
-    backgroundColor: "#8be3c9",
-  },
-  vanButton: {
-    backgroundColor: "#b5c1c1",
-  },
-  jeepButton: {
-    backgroundColor: "#c9a6db",
-  },
-  selectedVehicle: {
-    borderWidth: 2,
-    borderColor: "#3aa88d",
-  },
-  vehicleText: {
-    fontSize: 16,
-    fontWeight: "500",
-  },
-  routeCards: {
+  penaltyContainer: {
     marginVertical: 10,
   },
-  routeCard: {
-    backgroundColor: "#e57b9b",
+  penaltyCard: {
     borderRadius: 20,
     padding: 15,
     marginBottom: 15,
-    flexDirection: "row",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
     elevation: 3,
   },
-  routeIconColumn: {
-    width: 30,
-    alignItems: "center",
-    justifyContent: "space-between",
+  selectedPenalty: {
+    borderWidth: 2,
+    borderColor: "#3aa88d",
   },
-  routeLine: {
-    width: 2,
-    height: 20,
-    backgroundColor: "#fff",
-  },
-  arrowContainer: {
-    alignItems: "center",
-  },
-  arrowUp: {
-    color: "#fff",
-    fontSize: 18,
-    lineHeight: 18,
-  },
-  arrowDown: {
-    color: "#fff",
-    fontSize: 18,
-    lineHeight: 18,
-  },
-  routeInfoColumn: {
-    flex: 1,
-    paddingLeft: 10,
-    justifyContent: "center",
-  },
-  routeInfo: {
+  penaltyInfo: {
     flexDirection: "row",
     alignItems: "center",
     marginVertical: 5,
   },
-  routeLabel: {
+  icon: {
+    marginRight: 10,
+  },
+  penaltyLabel: {
     color: "#fff",
-    marginRight: 5,
     fontSize: 16,
   },
-  routeValue: {
+  penaltyValue: {
     color: "#ffea80",
     fontWeight: "bold",
     fontSize: 16,
   },
-  tripTypeColumn: {
-    justifyContent: "center",
-    alignItems: "flex-end",
-    paddingLeft: 10,
+  statusContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: 10,
   },
-  tripTypeButton: {
+  statusText: {
+    fontSize: 14,
+    fontWeight: "500",
+  },
+  paid: {
+    color: "#70e1d0",
+  },
+  unpaid: {
+    color: "#ff6b6b",
+  },
+  markPaidButton: {
     backgroundColor: "#70e1d0",
     paddingVertical: 6,
     paddingHorizontal: 12,
     borderRadius: 15,
   },
-  tripTypeText: {
+  markPaidText: {
     color: "#333",
     fontWeight: "500",
+  },
+  addButton: {
+    backgroundColor: "#8be3c9",
+    padding: 15,
+    borderRadius: 20,
+    marginHorizontal: 20,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    elevation: 3,
+  },
+  addButtonText: {
+    fontSize: 16,
+    fontWeight: "500",
+    color: "#333",
+  },
+  modalContainer: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalContent: {
+    backgroundColor: "#fff",
+    marginHorizontal: 20,
+    padding: 20,
+    borderRadius: 20,
+    width: "90%",
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: "600",
+    color: "#555",
+    marginBottom: 20,
+    textAlign: "center",
+  },
+  input: {
+    backgroundColor: "#f0f0f0",
+    borderRadius: 10,
+    padding: 10,
+    marginVertical: 10,
+    fontSize: 16,
+    color: "#333",
+  },
+  modalButtons: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 20,
+  },
+  modalButton: {
+    backgroundColor: "#70e1d0",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 15,
+  },
+  modalButtonText: {
+    color: "#333",
+    fontWeight: "500",
+    fontSize: 16,
   },
 });
