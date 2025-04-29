@@ -7,14 +7,17 @@ import {
   SafeAreaView,
   ScrollView,
   TextInput,
+  Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
+import * as SecureStore from "expo-secure-store";
 
 export default function Schedule() {
   const [selectedSchedule, setSelectedSchedule] = useState(null);
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
+  const router = useRouter();
 
   // Mock schedule data for UI purposes
   const mockSchedules = [
@@ -36,18 +39,34 @@ export default function Schedule() {
     },
   ];
 
+  // Handle logout functionality
+  const handleLogout = async () => {
+    try {
+      // Clear the stored tokens
+      await SecureStore.deleteItemAsync("user_token");
+      await SecureStore.deleteItemAsync("user_type");
+
+      // Show confirmation to user
+      Alert.alert("Success", "You have been logged out successfully");
+
+      // Navigate to login or home page
+      router.replace("/(tabs)");
+    } catch (error) {
+      console.error("Logout error:", error);
+      Alert.alert("Error", "Failed to log out. Please try again.");
+    }
+  };
+
   return (
     <LinearGradient
       colors={["#a1f4ff", "#c9b6e4", "#a0c7c7"]}
       style={styles.container}
     >
       <SafeAreaView style={styles.safeArea}>
-        {/* Menu/Login */}
+        {/* Menu/Logout */}
         <View style={styles.menuContainer}>
-          <TouchableOpacity>
-            <Link href="/login">
-              <Text style={styles.menuText}>Login</Text>
-            </Link>
+          <TouchableOpacity onPress={handleLogout}>
+            <Text style={styles.menuText}>Log-out</Text>
           </TouchableOpacity>
         </View>
 

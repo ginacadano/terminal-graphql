@@ -18,9 +18,17 @@ import DELETE_USER from "../mutations/deleteUserMutation";
 import { LinearGradient } from "expo-linear-gradient";
 
 export default function Account() {
+  // Move all hooks to the top level - no conditionals
+  const [modalVisible, setModalVisible] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [username, setUsername] = useState("");
+  const [usertype, setUsertype] = useState("");
+
+  // GraphQL query
   const { loading, error, data, refetch } = useQuery(GET_USERS);
 
-  // Properly handle the mutation result and error
+  // Mutations - all defined at the top level
   const [addUser, { loading: addLoading }] = useMutation(ADD_USER, {
     onCompleted: () => {
       Alert.alert("Success", "User added successfully");
@@ -32,7 +40,7 @@ export default function Account() {
     },
   });
 
-  const [updateUser] = useMutation(UPDATE_USER, {
+  const [updateUser, { loading: updateLoading }] = useMutation(UPDATE_USER, {
     onCompleted: () => {
       Alert.alert("Success", "User updated successfully");
       setModalVisible(false);
@@ -43,7 +51,7 @@ export default function Account() {
     },
   });
 
-  const [deleteUser] = useMutation(DELETE_USER, {
+  const [deleteUser, { loading: deleteLoading }] = useMutation(DELETE_USER, {
     onCompleted: () => {
       Alert.alert("Success", "User deleted successfully");
       refetch();
@@ -52,12 +60,6 @@ export default function Account() {
       Alert.alert("Error", error.message || "Failed to delete user");
     },
   });
-
-  const [modalVisible, setModalVisible] = useState(false);
-  const [editMode, setEditMode] = useState(false);
-  const [selectedUser, setSelectedUser] = useState(null);
-  const [username, setUsername] = useState("");
-  const [usertype, setUsertype] = useState("");
 
   const openAddModal = () => {
     setEditMode(false);
@@ -90,13 +92,11 @@ export default function Account() {
           },
         });
       } else {
-        // Call addUser mutation with proper variables
         await addUser({
           variables: {
             username,
             usertype,
           },
-          // Update cache to reflect the new user immediately
           update: (cache, { data: { addUser } }) => {
             try {
               const { users } = cache.readQuery({ query: GET_USERS });
@@ -110,10 +110,6 @@ export default function Account() {
           },
         });
       }
-
-      // Reset state
-      setUsername("");
-      setUsertype("");
     } catch (err) {
       console.error("Submit error:", err);
       Alert.alert("Error", err.message);
@@ -133,7 +129,6 @@ export default function Account() {
             try {
               await deleteUser({
                 variables: { user_id },
-                // Update cache to remove deleted user immediately
                 update: (cache) => {
                   try {
                     const { users } = cache.readQuery({ query: GET_USERS });
@@ -183,18 +178,32 @@ export default function Account() {
     </View>
   );
 
+  // Handle loading and error states
   if (loading) {
-    return <ActivityIndicator size="large" style={styles.centered} />;
+    return (
+      <LinearGradient
+        colors={["#a1f4ff", "#c9b6e4", "#a0c7c7"]}
+        style={styles.container}
+      >
+        <ActivityIndicator size="large" style={styles.centered} />
+      </LinearGradient>
+    );
   }
 
   if (error) {
     return (
-      <View style={styles.centered}>
-        <Text style={styles.errorText}>Error: {error.message}</Text>
-      </View>
+      <LinearGradient
+        colors={["#a1f4ff", "#c9b6e4", "#a0c7c7"]}
+        style={styles.container}
+      >
+        <View style={styles.centered}>
+          <Text style={styles.errorText}>Error: {error.message}</Text>
+        </View>
+      </LinearGradient>
     );
   }
 
+  // Main render
   return (
     <LinearGradient
       colors={["#a1f4ff", "#c9b6e4", "#a0c7c7"]}
@@ -243,10 +252,10 @@ export default function Account() {
                 <TouchableOpacity
                   onPress={handleSubmit}
                   style={styles.saveBtn}
-                  disabled={addLoading}
+                  disabled={addLoading || updateLoading}
                 >
                   <Text style={styles.actionText}>
-                    {addLoading ? "Saving..." : "Save"}
+                    {addLoading || updateLoading ? "Saving..." : "Save"}
                   </Text>
                 </TouchableOpacity>
               </View>
