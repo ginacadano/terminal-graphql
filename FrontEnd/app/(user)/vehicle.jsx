@@ -6,14 +6,37 @@ import {
   TouchableOpacity,
   SafeAreaView,
   ScrollView,
+  TextInput,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { Link } from "expo-router";
-import AntDesign from "@expo/vector-icons/AntDesign";
 
-export default function Index() {
+export default function Vehicle() {
   const [selectedVehicle, setSelectedVehicle] = useState(null);
+  const [isAddModalVisible, setIsAddModalVisible] = useState(false);
+
+  // Mock vehicle data for UI purposes
+  const mockVehicles = [
+    {
+      vehicle_id: 1,
+      plate_no: "ABC123",
+      capacity: 50,
+      categories: "Bus",
+      driver_name: "John Doe",
+      contact_no: "09123456789",
+      vehicle_name: "City Cruiser",
+    },
+    {
+      vehicle_id: 2,
+      plate_no: "XYZ789",
+      capacity: 15,
+      categories: "Van",
+      driver_name: "Jane Smith",
+      contact_no: "09876543210",
+      vehicle_name: "Travel Mate",
+    },
+  ];
 
   return (
     <LinearGradient
@@ -21,12 +44,11 @@ export default function Index() {
       style={styles.container}
     >
       <SafeAreaView style={styles.safeArea}>
-        {/* Menu Icon */}
-
+        {/* Menu/Login */}
         <View style={styles.menuContainer}>
           <TouchableOpacity>
-            <Link href="/(tabs)">
-              <Text style={styles.menuContainer}>Log-out</Text>
+            <Link href="/login">
+              <Text style={styles.menuText}>Login</Text>
             </Link>
           </TouchableOpacity>
         </View>
@@ -35,102 +57,184 @@ export default function Index() {
         <ScrollView contentContainerStyle={styles.scrollContent}>
           {/* Header Banner */}
           <View style={styles.headerBanner}>
-            <Text style={styles.headerText}>Happy Safe Trip!</Text>
+            <Text style={styles.headerText}>Vehicle Management</Text>
           </View>
 
-          {/* Vehicle Selection */}
+          {/* Vehicle List */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Vehicles:</Text>
-            <View style={styles.vehiclesContainer}>
-              <TouchableOpacity
-                style={[
-                  styles.vehicleButton,
-                  selectedVehicle === "bus" && styles.selectedVehicle,
-                  styles.busButton,
-                ]}
-                onPress={() => setSelectedVehicle("bus")}
-              >
-                <Text style={styles.vehicleText}>🚌 Bus</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={[
-                  styles.vehicleButton,
-                  selectedVehicle === "van" && styles.selectedVehicle,
-                  styles.vanButton,
-                ]}
-                onPress={() => setSelectedVehicle("van")}
-              >
-                <Text style={styles.vehicleText}>🚐 Van</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={[
-                  styles.vehicleButton,
-                  selectedVehicle === "jeep" && styles.selectedVehicle,
-                  styles.jeepButton,
-                ]}
-                onPress={() => setSelectedVehicle("jeep")}
-              >
-                <Text style={styles.vehicleText}>🚗 Jeep</Text>
-              </TouchableOpacity>
+            <View style={styles.vehicleContainer}>
+              {mockVehicles.map((vehicle) => (
+                <VehicleCard
+                  key={vehicle.vehicle_id}
+                  vehicle={vehicle}
+                  isSelected={selectedVehicle === vehicle.vehicle_id}
+                  onSelect={() => setSelectedVehicle(vehicle.vehicle_id)}
+                />
+              ))}
             </View>
           </View>
 
-          {/* Destination Section */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Destination:</Text>
+          {/* Add Vehicle Button */}
+          <TouchableOpacity
+            style={styles.addButton}
+            onPress={() => setIsAddModalVisible(true)}
+          >
+            <Text style={styles.addButtonText}>Add New Vehicle</Text>
+          </TouchableOpacity>
 
-            {/* Route Cards */}
-
-            <View style={styles.routeCards}>
-              <RouteCard from="Maasin" to="Bato" />
-              <RouteCard from="Maasin" to="Bay-bay" />
-              <RouteCard from="Maasin" to="Bato" />
+          {/* Add Vehicle Modal (Simplified) */}
+          {isAddModalVisible && (
+            <View style={styles.modalContainer}>
+              <LinearGradient
+                colors={["rgb(169, 205, 216)", "rgb(129, 177, 119)"]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.modalContent}
+              >
+                <Text style={styles.modalTitle}>Add Vehicle</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Plate Number"
+                  placeholderTextColor="#aaa"
+                />
+                <TextInput
+                  style={styles.input}
+                  placeholder="Capacity"
+                  placeholderTextColor="#aaa"
+                  keyboardType="numeric"
+                />
+                <TextInput
+                  style={styles.input}
+                  placeholder="Category (e.g., Bus, Van)"
+                  placeholderTextColor="#aaa"
+                />
+                <TextInput
+                  style={styles.input}
+                  placeholder="Driver Name"
+                  placeholderTextColor="#aaa"
+                />
+                <TextInput
+                  style={styles.input}
+                  placeholder="Contact Number"
+                  placeholderTextColor="#aaa"
+                  keyboardType="phone-pad"
+                />
+                <TextInput
+                  style={styles.input}
+                  placeholder="Vehicle Name"
+                  placeholderTextColor="#aaa"
+                />
+                <View style={styles.modalButtons}>
+                  <TouchableOpacity
+                    style={styles.modalButton}
+                    onPress={() => setIsAddModalVisible(false)}
+                  >
+                    <Text style={styles.modalButtonText}>Cancel</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.modalButton}>
+                    <Text style={styles.modalButtonText}>Submit</Text>
+                  </TouchableOpacity>
+                </View>
+              </LinearGradient>
             </View>
-          </View>
+          )}
         </ScrollView>
       </SafeAreaView>
     </LinearGradient>
   );
 }
 
-const RouteCard = ({ from, to }) => {
+const VehicleCard = ({ vehicle, isSelected, onSelect }) => {
   return (
     <LinearGradient
       colors={["rgb(169, 205, 216)", "rgb(129, 177, 119)"]}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
-      style={styles.routeCard}
+      style={[styles.vehicleCard, isSelected && styles.selectedVehicle]}
     >
-      <View style={styles.routeIconColumn}>
-        <View style={styles.routeLine}></View>
-        <View style={styles.arrowContainer}>
-          <Text style={styles.arrowUp}>↑ </Text>
-          <Text style={styles.arrowDown}> ↓</Text>
+      <TouchableOpacity onPress={onSelect}>
+        <View style={styles.vehicleInfo}>
+          <Ionicons
+            name="car-outline"
+            size={18}
+            color="#fff"
+            style={styles.icon}
+          />
+          <View>
+            <Text style={styles.vehicleLabel}>Plate No:</Text>
+            <Text style={styles.vehicleValue}>{vehicle.plate_no}</Text>
+          </View>
         </View>
-        <View style={styles.routeLine}></View>
-      </View>
-
-      <View style={styles.routeInfoColumn}>
-        <View style={styles.routeInfo}>
-          <Ionicons name="navigate-circle-outline" size={18} color="#fff" />
-          <Text style={styles.routeLabel}>From:</Text>
-          <Text style={styles.routeValue}>{from}</Text>
+        <View style={styles.vehicleInfo}>
+          <Ionicons
+            name="people-outline"
+            size={18}
+            color="#fff"
+            style={styles.icon}
+          />
+          <View>
+            <Text style={styles.vehicleLabel}>Capacity:</Text>
+            <Text style={styles.vehicleValue}>{vehicle.capacity}</Text>
+          </View>
         </View>
-
-        <View style={styles.routeInfo}>
-          <Ionicons name="location-outline" size={18} color="#fff" />
-          <Text style={styles.routeLabel}>To:</Text>
-          <Text style={styles.routeValue}>{to}</Text>
+        <View style={styles.vehicleInfo}>
+          <Ionicons
+            name="bus-outline"
+            size={18}
+            color="#fff"
+            style={styles.icon}
+          />
+          <View>
+            <Text style={styles.vehicleLabel}>Category:</Text>
+            <Text style={styles.vehicleValue}>{vehicle.categories}</Text>
+          </View>
         </View>
-      </View>
-
-      <View style={styles.tripTypeColumn}>
-        <View style={styles.tripTypeButton}>
-          <Text style={styles.tripTypeText}>One Way</Text>
+        <View style={styles.vehicleInfo}>
+          <Ionicons
+            name="person-outline"
+            size={18}
+            color="#fff"
+            style={styles.icon}
+          />
+          <View>
+            <Text style={styles.vehicleLabel}>Driver:</Text>
+            <Text style={styles.vehicleValue}>{vehicle.driver_name}</Text>
+          </View>
         </View>
-      </View>
+        <View style={styles.vehicleInfo}>
+          <Ionicons
+            name="call-outline"
+            size={18}
+            color="#fff"
+            style={styles.icon}
+          />
+          <View>
+            <Text style={styles.vehicleLabel}>Contact:</Text>
+            <Text style={styles.vehicleValue}>{vehicle.contact_no}</Text>
+          </View>
+        </View>
+        <View style={styles.vehicleInfo}>
+          <Ionicons
+            name="car-sport-outline"
+            size={18}
+            color="#fff"
+            style={styles.icon}
+          />
+          <View>
+            <Text style={styles.vehicleLabel}>Name:</Text>
+            <Text style={styles.vehicleValue}>{vehicle.vehicle_name}</Text>
+          </View>
+        </View>
+        <View style={styles.actionContainer}>
+          <TouchableOpacity style={styles.actionButton}>
+            <Text style={styles.actionText}>Edit</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.actionButton}>
+            <Text style={styles.actionText}>Delete</Text>
+          </TouchableOpacity>
+        </View>
+      </TouchableOpacity>
     </LinearGradient>
   );
 };
@@ -149,14 +253,10 @@ const styles = StyleSheet.create({
     right: 20,
     zIndex: 10,
   },
-  menuIcon: {
-    padding: 5,
-  },
-  menuLine: {
-    width: 24,
-    height: 2,
-    backgroundColor: "#555",
-    marginVertical: 3,
+  menuText: {
+    fontSize: 16,
+    color: "#555",
+    fontWeight: "500",
   },
   scrollContent: {
     paddingBottom: 40,
@@ -191,109 +291,115 @@ const styles = StyleSheet.create({
     color: "#555",
     marginBottom: 10,
   },
-  vehiclesContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+  vehicleContainer: {
+    marginVertical: 10,
   },
-  vehicleButton: {
-    padding: 15,
+  vehicleCard: {
     borderRadius: 20,
-    width: "30%",
-    alignItems: "center",
+    padding: 15,
+    marginBottom: 15,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
     elevation: 3,
-  },
-  busButton: {
-    backgroundColor: "#8be3c9",
-  },
-  vanButton: {
-    backgroundColor: "#b5c1c1",
-  },
-  jeepButton: {
-    backgroundColor: "#c9a6db",
   },
   selectedVehicle: {
     borderWidth: 2,
     borderColor: "#3aa88d",
   },
-  vehicleText: {
+  vehicleInfo: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 5,
+  },
+  icon: {
+    marginRight: 10,
+  },
+  vehicleLabel: {
+    color: "#fff",
     fontSize: 16,
+  },
+  vehicleValue: {
+    color: "#ffea80",
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+  actionContainer: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    marginTop: 10,
+  },
+  actionButton: {
+    backgroundColor: "#70e1d0",
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 15,
+    marginLeft: 10,
+  },
+  actionText: {
+    color: "#333",
     fontWeight: "500",
   },
-  routeCards: {
-    marginVertical: 10,
-  },
-  routeCard: {
-    backgroundColor: "#e57b9b",
-    borderRadius: 20,
+  addButton: {
+    backgroundColor: "#8be3c9",
     padding: 15,
-    marginBottom: 15,
-    flexDirection: "row",
+    borderRadius: 20,
+    marginHorizontal: 20,
+    alignItems: "center",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
     elevation: 3,
   },
-  routeIconColumn: {
-    width: 30,
-    alignItems: "center",
-    justifyContent: "space-between",
+  addButtonText: {
+    fontSize: 16,
+    fontWeight: "500",
+    color: "#333",
   },
-  routeLine: {
-    width: 2,
-    height: 20,
+  modalContainer: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalContent: {
     backgroundColor: "#fff",
+    marginHorizontal: 20,
+    padding: 20,
+    borderRadius: 20,
+    width: "90%",
   },
-  arrowContainer: {
-    alignItems: "center",
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: "600",
+    color: "#555",
+    marginBottom: 20,
+    textAlign: "center",
   },
-  arrowUp: {
-    color: "#fff",
-    fontSize: 18,
-    lineHeight: 18,
+  input: {
+    backgroundColor: "#f0f0f0",
+    borderRadius: 10,
+    padding: 10,
+    marginVertical: 10,
+    fontSize: 16,
+    color: "#333",
   },
-  arrowDown: {
-    color: "#fff",
-    fontSize: 18,
-    lineHeight: 18,
-  },
-  routeInfoColumn: {
-    flex: 1,
-    paddingLeft: 10,
-    justifyContent: "center",
-  },
-  routeInfo: {
+  modalButtons: {
     flexDirection: "row",
-    alignItems: "center",
-    marginVertical: 5,
+    justifyContent: "space-between",
+    marginTop: 20,
   },
-  routeLabel: {
-    color: "#fff",
-    marginRight: 5,
-    fontSize: 16,
-  },
-  routeValue: {
-    color: "#ffea80",
-    fontWeight: "bold",
-    fontSize: 16,
-  },
-  tripTypeColumn: {
-    justifyContent: "center",
-    alignItems: "flex-end",
-    paddingLeft: 10,
-  },
-  tripTypeButton: {
+  modalButton: {
     backgroundColor: "#70e1d0",
-    paddingVertical: 6,
-    paddingHorizontal: 12,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     borderRadius: 15,
   },
-  tripTypeText: {
+  modalButtonText: {
     color: "#333",
     fontWeight: "500",
+    fontSize: 16,
   },
 });
