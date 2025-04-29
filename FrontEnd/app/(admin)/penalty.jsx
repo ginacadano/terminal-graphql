@@ -46,7 +46,7 @@ export default function Penalty() {
         <View style={styles.menuContainer}>
           <TouchableOpacity>
             <Link href="/login">
-              <Text style={styles.menuText}>Login</Text>
+              <Text style={styles.menuText}>Log-out</Text>
             </Link>
           </TouchableOpacity>
         </View>

@@ -48,7 +48,7 @@ const Login = () => {
           await SecureStore.setItemAsync("user_type", user.usertype);
 
           if (user.usertype === "admin") {
-            router.replace("/(admin)/account");
+            router.replace("/(admin)/penalty");
           } else if (user.usertype === "ordinary user") {
             router.replace("/(user)/schedule");
           } else {
