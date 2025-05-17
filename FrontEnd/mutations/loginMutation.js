@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-const LOGIN = gql`
+export const LOGIN = gql`
   mutation UserLogin($username: String!, $password: String!) {
     userLogin(username: $username, password: $password) {
       type
@@ -15,4 +15,4 @@ const LOGIN = gql`
   }
 `;
 
-export default LOGIN;
+

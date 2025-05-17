@@ -1,4 +1,9 @@
 {
     "editor.formatOnSave": true,
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "workbench.colorCustomizations": {
+        "activityBar.background": "#322556",
+        "titleBar.activeBackground": "#463478",
+        "titleBar.activeForeground": "#FCFCFE"
+    }
 }

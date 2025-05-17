@@ -16,7 +16,7 @@ import { Link } from "expo-router";
 import { useMutation } from "@apollo/client";
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
-import LOGIN from "./mutations/loginMutation";
+import {LOGIN} from "../mutations/loginMutation";
 
 const Login = () => {
   const [username, setUsername] = useState("");

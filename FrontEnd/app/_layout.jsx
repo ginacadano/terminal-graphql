@@ -1,6 +1,6 @@
 import { Stack } from "expo-router";
 import { ApolloProvider } from "@apollo/client";
-import client1 from "./helpers/apolloClient";
+import client1 from "../helpers/apolloClient";
 import { useEffect, useState } from "react";
 import { View, ActivityIndicator, Text, StyleSheet } from "react-native";
 import * as SecureStore from "expo-secure-store";

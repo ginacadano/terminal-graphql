@@ -10,6 +10,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { Link } from "expo-router";
+import { useRouter } from "expo-router";
 import AntDesign from "@expo/vector-icons/AntDesign";
 export default function Index() {
   const [selectedVehicle, setSelectedVehicle] = useState(null);
@@ -23,10 +24,9 @@ export default function Index() {
         {/* Menu Icon */}
 
         <View style={styles.menuContainer}>
-          <TouchableOpacity>
-            <Link href="/login">
-              <Text style={styles.menuContainer}>Login</Text>
-            </Link>
+          <TouchableOpacity onPress={() => router.push('/login')}>
+            <Text>Log-In</Text>
+            
           </TouchableOpacity>
         </View>
 
